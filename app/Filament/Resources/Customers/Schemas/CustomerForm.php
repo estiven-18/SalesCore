@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Customers\Schemas;
 
+use BcMath\Number;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -15,16 +16,14 @@ class CustomerForm
                 TextInput::make('name')
                     ->required(), 
                 TextInput::make('document')
-                    ->required()
-                    ->unique(ignoreRecord: true),
+                    ->required(),  
                 TextInput::make('phone')
                     ->label('Phone number')
                     ->required(),
                 TextInput::make('email')
                     ->label('Email address')    
                     ->required()
-                    ->email()
-                    ->unique(ignoreRecord: true),
+                    ->email(),
                 TextInput::make('address')
                     ->label('Address')
                     ->required(),
