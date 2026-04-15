@@ -12,7 +12,7 @@ class OrderForm
     public static function configure(Schema $schema): Schema
     {
         return $schema->components([
-            
+
             TextInput::make('number')
                 ->required(),
 
@@ -36,12 +36,23 @@ class OrderForm
                         ->numeric()
                         ->required(),
                 ])
-                ->columns(3)
-                ->createItemButtonLabel('Agregar producto'),
+                ->columns(3),
 
             TextInput::make('total')
-                ->numeric()
-                ->disabled(),
+    ->numeric()
+    ->disabled()
+    ->dehydrated()
+    ->live()
+    ->afterStateHydrated(function (callable $set, callable $get) {
+
+        $items = $get('items') ?? [];
+
+        $total = collect($items)->sum(function ($item) {
+            return ($item['quantity'] ?? 0) * ($item['price'] ?? 0);
+        });
+
+        $set('total', $total);
+    }),
         ]);
     }
 }
