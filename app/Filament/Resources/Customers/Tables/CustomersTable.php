@@ -3,7 +3,9 @@
 namespace App\Filament\Resources\Customers\Tables;
 
 use App\Filament\Resources\Customers\CustomerResource;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
@@ -25,7 +27,7 @@ class CustomersTable
                     ->label('Phone number')
                     ->searchable(),
                 TextColumn::make('email')
-                    ->label('Email address')    
+                    ->label('Email address')
                     ->searchable(),
                 TextColumn::make('address')
                     ->label('Address')
@@ -45,9 +47,13 @@ class CustomersTable
                 //
             ])
             ->recordActions([
-                ViewAction::make()
-                    ->url(fn ($record): string => CustomerResource::getUrl('view', ['record' => $record])),
-                EditAction::make(),
+                ActionGroup::make([
+                    ViewAction::make()
+                        ->url(fn($record): string => CustomerResource::getUrl('view', ['record' => $record])),
+                    EditAction::make()
+                        ->url(fn($record): string => CustomerResource::getUrl('edit', ['record' => $record])),
+                    DeleteAction::make(),
+                ]),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

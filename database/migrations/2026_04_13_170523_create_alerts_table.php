@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('message');
             $table->string('status')->default('active');
             $table->boolean('active')->default(true);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

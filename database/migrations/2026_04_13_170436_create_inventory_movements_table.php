@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('quantity');
             $table->string('reason')->nullable();
             $table->boolean('active')->default(true);
+            $table->softDeletes();
             $table->timestamps();
         });
     }
