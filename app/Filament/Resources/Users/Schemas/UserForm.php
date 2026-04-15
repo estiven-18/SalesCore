@@ -19,6 +19,7 @@ class UserForm
                     ->label('Email address')
                     ->email()
                     ->required()
+                    
                     ->unique(ignoreRecord: true),
                 TextInput::make('password')
                     ->password()
