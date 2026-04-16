@@ -16,8 +16,8 @@ return new class extends Migration
             $table->foreignId('customer_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->decimal('subtotal', 10, 2);
-            $table->decimal('tax', 10, 2)->default(0);
-            $table->decimal('discount', 10, 2)->default(0);
+            $table->decimal('tax_total', 10, 2)->default(0);
+            $table->decimal('discount_total', 10, 2)->default(0);
             $table->decimal('total', 10, 2);
             $table->boolean('active')->default(true);
             $table->softDeletes();

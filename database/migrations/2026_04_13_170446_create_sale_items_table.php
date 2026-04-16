@@ -17,6 +17,9 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained()->cascadeOnDelete();
             $table->integer('quantity');
             $table->decimal('unit_price', 10, 2);
+            $table->decimal('discount', 10, 2)->default(0);
+            $table->decimal('tax_rate', 10, 2)->default(0);
+            $table->decimal('tax_amount', 10, 2)->default(0);
             $table->decimal('subtotal', 10, 2);
             $table->boolean('active')->default(true);
             $table->softDeletes();
