@@ -49,7 +49,6 @@ class OrderResource extends Resource
                 TextColumn::make('created_at')->dateTime(),
             ])
             ->actions([
-                EditAction::make(),
                 ViewAction::make(),
                 DeleteAction::make(),
 ]);
