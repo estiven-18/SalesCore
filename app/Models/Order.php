@@ -10,7 +10,6 @@ class Order extends Model
         'number',
         'customer_id',
         'total',
-        'status',
     ];
 
     public function items()

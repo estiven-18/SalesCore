@@ -30,29 +30,39 @@ class OrderForm
 
                     TextInput::make('quantity')
                         ->numeric()
-                        ->required(),
+                        ->required()
+                        ->live(),
 
                     TextInput::make('price')
                         ->numeric()
-                        ->required(),
+                        ->required()
+                        ->live(), 
                 ])
-                ->columns(3),
+                ->columns(3)
+                ->live() 
+                ->afterStateUpdated(function (callable $set, callable $get) {
+                    self::updateTotal($set, $get);
+                }),
 
             TextInput::make('total')
-    ->numeric()
-    ->disabled()
-    ->dehydrated()
-    ->live()
-    ->afterStateHydrated(function (callable $set, callable $get) {
+                ->numeric()
+                ->disabled()
+                ->dehydrated()
+                ->afterStateHydrated(function (callable $set, callable $get) {
+                    self::updateTotal($set, $get);
+                }),
+        ]);
+    }
 
+    
+    protected static function updateTotal(callable $set, callable $get): void
+    {
         $items = $get('items') ?? [];
 
         $total = collect($items)->sum(function ($item) {
-            return ($item['quantity'] ?? 0) * ($item['price'] ?? 0);
+            return floatval($item['quantity'] ?? 0) * floatval($item['price'] ?? 0);
         });
 
-        $set('total', $total);
-    }),
-        ]);
+        $set('total', number_format($total, 2, '.', ''));
     }
 }

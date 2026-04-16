@@ -15,7 +15,11 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Actions;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
+use Filament\Actions\DeleteAction;
 class OrderResource extends Resource
 {
     protected static ?string $model = Order::class;
@@ -36,9 +40,20 @@ class OrderResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return OrdersTable::configure($table);
+        return $table
+            ->columns([
+                TextColumn::make('id'),
+                TextColumn::make('number'),
+                TextColumn::make('customer.name')->label('Customer'),
+                TextColumn::make('total')->money('usd'),
+                TextColumn::make('created_at')->dateTime(),
+            ])
+            ->actions([
+                EditAction::make(),
+                ViewAction::make(),
+                DeleteAction::make(),
+]);
     }
-
     public static function getRelations(): array
     {
         return [
