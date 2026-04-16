@@ -14,7 +14,9 @@ class OrderForm
         return $schema->components([
 
             TextInput::make('number')
-                ->required(),
+                ->disabled()       
+                ->dehydrated(false) 
+                ->placeholder('Se genera automáticamente'),
 
             Select::make('customer_id')
                 ->relationship('customer', 'name')
@@ -36,10 +38,10 @@ class OrderForm
                     TextInput::make('price')
                         ->numeric()
                         ->required()
-                        ->live(), 
+                        ->live(),
                 ])
                 ->columns(3)
-                ->live() 
+                ->live()
                 ->afterStateUpdated(function (callable $set, callable $get) {
                     self::updateTotal($set, $get);
                 }),
@@ -54,7 +56,7 @@ class OrderForm
         ]);
     }
 
-    
+
     protected static function updateTotal(callable $set, callable $get): void
     {
         $items = $get('items') ?? [];
