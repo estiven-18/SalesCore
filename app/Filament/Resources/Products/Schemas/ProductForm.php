@@ -2,10 +2,12 @@
 
 namespace App\Filament\Resources\Products\Schemas;
 
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 
 class ProductForm
 {
@@ -13,25 +15,46 @@ class ProductForm
     {
         return $schema
             ->components([
-                TextInput::make('name')
-                    ->required(),
-                TextInput::make('description')
-                    ->required(),
-                TextInput::make('price')
-                    ->numeric()
-                    ->required(),
-                TextInput::make('stock')
-                    ->numeric()
-                    ->required(),
-                Select::make('categories')
-                    ->relationship('categories', 'name')
-                    ->multiple()
-                    ->preload()
-                    ->searchable()
-                    ->required(),
-                Toggle::make('active')
-                    ->default(true)
-                    ->required(),   
+               
+                Grid::make(1)
+                    ->schema([
+                        Section::make('Producto')
+                            ->schema([
+                                TextInput::make('name')
+                                    ->label('Nombre')
+                                    ->required(),
+                                MarkdownEditor::make('description')
+                                    ->label('Descripción')
+                                    ->disableAllToolbarButtons()
+                                    ->required(),
+                            ])
+                            ->columnSpan(1),
+                        
+                    ]),
+                    Grid::make(1)
+                            ->schema([
+                                Section::make('Categorías')
+                                    ->schema([
+                                        Select::make('categories')
+                                            ->relationship('categories', 'name')
+                                            ->multiple()
+                                            ->preload()
+                                            ->searchable()
+                                            ->required(),
+                                    ]),
+                                Section::make('Precio E Inventario')
+                                    ->schema([
+                                        TextInput::make('price')
+                                            ->label('Precio')
+                                            ->numeric()
+                                            ->required(),
+                                        TextInput::make('stock')
+                                            ->label('Stock')
+                                            ->numeric()
+                                            ->required(),
+                                    ]),
+                            ])
+                            ->columnSpan(1),
             ]);
     }
 }

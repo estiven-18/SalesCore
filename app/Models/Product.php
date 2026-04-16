@@ -15,8 +15,18 @@ class Product extends Model
         'description',
         'price',
         'stock',
+        'tax_rate',
         'active',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'price' => 'decimal:2',
+            'tax_rate' => 'decimal:2',
+            'active' => 'boolean',
+        ];
+    }
 
     public function categories(): BelongsToMany
     {

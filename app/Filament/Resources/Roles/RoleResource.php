@@ -11,6 +11,8 @@ use App\Filament\Resources\Roles\Schemas\RoleForm;
 use App\Filament\Resources\Roles\Schemas\RoleInfolist;
 use App\Filament\Resources\Roles\Tables\RolesTable;
 use BackedEnum;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -38,6 +40,14 @@ class RoleResource extends Resource
     public static function table(Table $table): Table
     {
         return RolesTable::configure($table);
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
     }
 
     public static function getRelations(): array
