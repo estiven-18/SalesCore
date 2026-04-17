@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\Orders\Pages;
+namespace App\Filament\Resources\Sales\Pages;
 
-use App\Filament\Resources\Orders\OrderResource;
+use App\Filament\Resources\Sales\SaleResource;
 use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 
-class ViewOrder extends ViewRecord
+class ViewSale extends ViewRecord
 {
-    protected static string $resource = OrderResource::class;
+    protected static string $resource = SaleResource::class;
 
     protected function getHeaderActions(): array
     {

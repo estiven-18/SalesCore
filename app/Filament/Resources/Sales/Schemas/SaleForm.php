@@ -1,22 +1,18 @@
 <?php
 
-namespace App\Filament\Resources\Orders\Schemas;
+namespace App\Filament\Resources\Sales\Schemas;
 
+use App\Models\Product;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Repeater;
 
-class OrderForm
+class SaleForm
 {
     public static function configure(Schema $schema): Schema
     {
         return $schema->components([
-
-            TextInput::make('number')
-                ->disabled()       
-                ->dehydrated(false) 
-                ->placeholder('Se genera automáticamente'),
 
             Select::make('customer_id')
                 ->relationship('customer', 'name')
@@ -28,19 +24,41 @@ class OrderForm
                 ->schema([
                     Select::make('product_id')
                         ->relationship('product', 'name')
+                        ->live()
+                        ->afterStateUpdated(function ($state, callable $set) {
+                            $product = Product::find($state);
+                            $set('unit_price', $product?->price ?? 0);
+                            $set('tax_rate', $product?->tax_rate ?? 0);
+                        })
                         ->required(),
 
                     TextInput::make('quantity')
                         ->numeric()
                         ->required()
+                        ->default(1)
                         ->live(),
 
-                    TextInput::make('price')
+                    TextInput::make('discount')
+                        ->label('Descuento (%)')
                         ->numeric()
+                        ->default(0)
+                        ->minValue(0)
+                        ->maxValue(100)
+                        ->live(),
+
+                    TextInput::make('tax_rate')
+                        ->numeric()
+                        ->default(0)
                         ->required()
                         ->live(),
+
+                    TextInput::make('unit_price')
+                        ->numeric()
+                        ->required()
+                        ->disabled()
+                        ->live(),
                 ])
-                ->columns(3)
+                ->columns(5)
                 ->live()
                 ->afterStateUpdated(function (callable $set, callable $get) {
                     self::updateTotal($set, $get);
@@ -50,6 +68,7 @@ class OrderForm
                 ->numeric()
                 ->disabled()
                 ->dehydrated()
+                ->default(0)
                 ->afterStateHydrated(function (callable $set, callable $get) {
                     self::updateTotal($set, $get);
                 }),
@@ -62,7 +81,17 @@ class OrderForm
         $items = $get('items') ?? [];
 
         $total = collect($items)->sum(function ($item) {
-            return floatval($item['quantity'] ?? 0) * floatval($item['price'] ?? 0);
+            $quantity = max(0, floatval($item['quantity'] ?? 0));
+            $unitPrice = max(0, floatval($item['unit_price'] ?? 0));
+            $discountRate = min(100, max(0, floatval($item['discount'] ?? 0)));
+            $taxRate = max(0, floatval($item['tax_rate'] ?? 0));
+
+            $baseAmount = $quantity * $unitPrice;
+            $discountAmount = $baseAmount * ($discountRate / 100);
+            $taxableAmount = max(0, $baseAmount - $discountAmount);
+            $taxAmount = $taxableAmount * ($taxRate / 100);
+
+            return $taxableAmount + $taxAmount;
         });
 
         $set('total', number_format($total, 2, '.', ''));

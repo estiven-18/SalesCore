@@ -7,17 +7,19 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     /**
      * Run the migrations.
+     * DEPRECATED: Usar sale_items en su lugar
      */
     public function up(): void
     {
-        Schema::create('order_items', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('order_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('product_id')->constrained();
-            $table->integer('quantity');
-            $table->decimal('price', 10, 2);
-            $table->timestamps();
-        });
+        // Migración obsoleta - usar sale_items en su lugar
+        // Schema::create('order_items', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->foreignId('order_id')->constrained()->cascadeOnDelete();
+        //     $table->foreignId('product_id')->constrained();
+        //     $table->integer('quantity');
+        //     $table->decimal('price', 10, 2);
+        //     $table->timestamps();
+        // });
     }
 
     /**
@@ -25,6 +27,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('order_items');
+        // Schema::dropIfExists('order_items');
     }
 };
