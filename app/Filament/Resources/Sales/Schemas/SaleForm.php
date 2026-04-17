@@ -17,6 +17,23 @@ class SaleForm
             Select::make('customer_id')
                 ->relationship('customer', 'name')
                 ->searchable()
+                ->required()
+                ->createOptionForm([
+                    TextInput::make('name')
+                        ->required(),
+                    TextInput::make('email')
+                        ->required()
+                        ->email(),
+                    TextInput::make('document')
+                        ->required(),
+                    TextInput::make('phone')
+                        ->required(),
+                    TextInput::make('address'),
+                ]),
+
+            Select::make('user_id')
+                ->relationship(name: 'user', titleAttribute: 'name')
+                ->searchable()
                 ->required(),
 
             Repeater::make('items')
