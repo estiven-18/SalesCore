@@ -21,10 +21,10 @@ class ProductForm
                         Section::make('Producto')
                             ->schema([
                                 TextInput::make('name')
-                                    ->label('Nombre')
+                                    ->label('Name')
                                     ->required(),
                                 MarkdownEditor::make('description')
-                                    ->label('Descripción')
+                                    ->label('Description')
                                     ->disableAllToolbarButtons()
                                     ->required(),
                             ])
@@ -42,10 +42,11 @@ class ProductForm
                                             ->searchable()
                                             ->required(),
                                     ]),
-                                Section::make('Precio E Inventario')
+                                Section::make('Price and Inventory')
                                     ->schema([
                                         TextInput::make('price')
-                                            ->label('Precio')
+                                            ->label('Price')
+                                            ->prefix('$')
                                             ->numeric()
                                             ->required(),
                                         TextInput::make('stock')
