@@ -101,7 +101,6 @@ class SalesTable
             ])
             ->recordActions([
                  ActionGroup::make([
-                    ViewAction::make(),
                     EditAction::make(),
                     Action::make('activate')
                         ->label('Activar')
