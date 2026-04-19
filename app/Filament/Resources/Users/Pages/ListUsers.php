@@ -30,10 +30,10 @@ class ListUsers extends ListRecords
     public function getTabs(): array
     {
         return [
-            'Todos' => Tab::make('Todos'),
-            'Activos' => Tab::make('Activos')
+            'Todos' => Tab::make('All'),
+            'Activos' => Tab::make('Active')
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('active', true)),
-            'Inactivos' => Tab::make('Inactivos')
+            'Inactivos' => Tab::make('Inactive')
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('active', false)),
         ];
     }

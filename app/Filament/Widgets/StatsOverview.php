@@ -18,9 +18,9 @@ class StatsOverview extends BaseWidget
         })->count();
 
         return [
-            Stat::make('Cantidad de usuarios', (string) $totalUsers),
-            Stat::make('Usuarios desactivados', (string) $disabledUsers),
-            Stat::make('Cantidad de vendedores', (string) $sellerUsers),
+            Stat::make('Total Users', (string) $totalUsers),
+            Stat::make('Disabled Users', (string) $disabledUsers),
+            Stat::make('Number of Sellers', (string) $sellerUsers),
         ];
     }
 }
