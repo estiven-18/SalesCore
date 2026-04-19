@@ -12,6 +12,16 @@ use Filament\Actions\ViewAction;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TrashedFilter;
+use Filament\Actions\RestoreAction;
+use Filament\Actions\RestoreBulkAction;
+use Filament\Actions\ForceDeleteAction;
+use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Infolists\Components\IconEntry;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Actions\Action;
+use Filament\Infolists\Components\Section;
+use Filament\Schemas\Components\Section as ComponentsSection;
 
 class CustomersTable
 {
@@ -44,20 +54,72 @@ class CustomersTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                TrashedFilter::make(),
             ])
             ->recordActions([
+                Action::make('SendEmail')
+                    ->label('Send emailHACER'),
+                    
                 ActionGroup::make([
-                    ViewAction::make()
-                        ->url(fn($record): string => CustomerResource::getUrl('view', ['record' => $record])),
-                    EditAction::make()
-                        ->url(fn($record): string => CustomerResource::getUrl('edit', ['record' => $record])),
-                    DeleteAction::make(),
+                    Action::make('viewUser')
+                        ->label('View customer')
+                        ->icon('heroicon-o-eye')
+                        ->visible(fn ($record): bool => ! $record->trashed())
+                        ->infolist([
+                            TextEntry::make('name')
+                                ->label('Name'),
+                            TextEntry::make('document')
+                                ->label('Document'),
+                            TextEntry::make('phone')
+                                ->label('Phone'),    
+                            TextEntry::make('email')
+                                ->label('Email'),
+                            TextEntry::make('address')
+                                ->label('Address'),
+                            IconEntry::make('active')
+                                ->label('Active')
+                                ->boolean(),
+                        ])
+                        ->modalSubmitAction(false)
+                        ->modalCancelActionLabel('Cerrar')
+                        ->slideOver()
+                        ->modalwidth('sm'),
+
+                    EditAction::make(),
+
+                    Action::make('activate')
+                        ->label('Activate')
+                        ->icon('heroicon-o-check-circle')
+                        ->color('success')
+                        ->requiresConfirmation()
+                        ->visible(fn ($record): bool => ! $record->trashed() && ! (bool) $record->active)
+                        ->action(fn ($record) => $record->update(['active' => true])),
+
+                    Action::make('deactivate')
+                        ->label('Deactivate')
+                        ->icon('heroicon-o-no-symbol')
+                        ->color('warning')
+                        ->requiresConfirmation()
+                        ->visible(fn ($record): bool => ! $record->trashed() && (bool) $record->active)
+                        ->action(fn ($record) => $record->update(['active' => false])),
+
+                    DeleteAction::make()
+                        ->visible(fn ($record): bool => ! $record->trashed())
+                        ->before(fn ($record) => $record->update(['active' => false])),
+
+                    RestoreAction::make()
+                        ->visible(fn ($record): bool => $record->trashed()),
+
+                    ForceDeleteAction::make()
+                        ->visible(fn ($record): bool => $record->trashed()),
                 ]),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->before(fn ($records) => $records->each(fn ($record) => $record->update(['active' => false]))),
+                    RestoreBulkAction::make(),
+                    ForceDeleteBulkAction::make(),
                 ]),
             ]);
     }

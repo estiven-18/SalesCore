@@ -71,7 +71,8 @@ class UsersTable
                         ])
                         ->modalSubmitAction(false)
                         ->modalCancelActionLabel('Cerrar')
-                        ->slideOver(),
+                        ->slideOver()
+                        ->modalwidth('sm'),
 
                     EditAction::make(),
 
