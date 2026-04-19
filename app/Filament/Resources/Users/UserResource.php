@@ -33,6 +33,9 @@ class UserResource extends Resource
     // es decir, cuando Filament muestre un registro de este modelo, usará el valor del atributo 'name' como título del registro
     protected static ?string $recordTitleAttribute = 'name';
 
+    // esto es para decirle a Filament que grupo de navegación usar en la sidebar para este recurso
+    protected static string|\UnitEnum|null $navigationGroup = 'People';
+
     // estos son los métodos que Filament usará para configurar el formulario, la infolist y la tabla de este recurso
     public static function form(Schema $schema): Schema
     {
