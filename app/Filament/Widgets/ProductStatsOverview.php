@@ -15,9 +15,9 @@ class ProductStatsOverview extends BaseWidget
         $producDescativados = Product::withTrashed()->where('active', false)->count();
 
         return [
-            Stat::make('Cantidad de productos', (string) $totalProducts),
-            Stat::make('Productos en stock', (string) $productsInStock),
-            Stat::make('Productos desactivados', (string) $producDescativados),
+            Stat::make('Total Products', (string) $totalProducts),
+            Stat::make('Products in Stock', (string) $productsInStock),
+            Stat::make('Disabled Products', (string) $producDescativados),
         ];
     }
 }

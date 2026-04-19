@@ -30,11 +30,14 @@ class ProductsTable
                 TextColumn::make('description')
                     ->searchable(),
                 TextColumn::make('price')
-                    ->money('pesos')
+                    ->sortable()
+                    ->money('COP')
                     ->searchable(),
                 TextColumn::make('stock')
+                    ->sortable()
                     ->searchable(),
                 TextColumn::make('tax_rate')
+                    ->sortable()
                     ->suffix('%')
                     ->searchable(),
                 TextColumn::make('categories.name')
@@ -44,7 +47,7 @@ class ProductsTable
                     ->searchable()
                     ->placeholder('-'),
                 IconColumn::make('active')
-                    ->label('Activo')
+                    ->label('Active')
                     ->boolean(),
                 TextColumn::make('created_at')
                     ->dateTime()
@@ -55,17 +58,33 @@ class ProductsTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
-                
+
             ])
             ->filters([
                 TrashedFilter::make(),
             ])
             ->recordActions([
                 ActionGroup::make([
+                    Action::make('activate')
+                        ->label('Activate')
+                        ->icon('heroicon-o-check-circle')
+                        ->color('success')
+                        ->visible(fn($record): bool => ! $record->trashed() && ! (bool) $record->active)
+                        ->action(fn($record) => $record->update(['active' => true])),
+
+                    Action::make('deactivate')
+                        ->label('Deactivate')
+                        ->icon('heroicon-o-no-symbol')
+                        ->color('warning')
+                        ->visible(fn($record): bool => ! $record->trashed() && (bool) $record->active)
+                        ->action(fn($record) => $record->update(['active' => false])),
+                    EditAction::make(),
+
                     Action::make('adjustPrice')
                         ->label('Adjust price')
                         ->icon('heroicon-o-currency-dollar')
-                        ->fillForm(fn ($record): array => [
+                        ->color('info')
+                        ->fillForm(fn($record): array => [
                             'price' => $record->price,
                         ])
                         ->form([
@@ -73,19 +92,21 @@ class ProductsTable
                                 ->label('Price*')
                                 ->prefix('$')
                                 ->numeric()
+                                ->minValue(0)
                                 ->required(),
                         ])
                         ->modalHeading('Adjust price')
                         ->modalSubmitActionLabel('Save')
                         ->modalCancelActionLabel('Cancel')
-                        ->action(fn ($record, array $data) => $record->update([
+                        ->action(fn($record, array $data) => $record->update([
                             'price' => $data['price'],
-                        ])),
+                        ]))->modalWidth('sm'),
 
                     Action::make('adjustStock')
                         ->label('Adjust stock')
+                        ->color('info')
                         ->icon('heroicon-o-archive-box')
-                        ->fillForm(fn ($record): array => [
+                        ->fillForm(fn($record): array => [
                             'stock' => $record->stock,
                         ])
                         ->form([
@@ -99,39 +120,26 @@ class ProductsTable
                         ->modalHeading('Adjust stock')
                         ->modalSubmitActionLabel('Save')
                         ->modalCancelActionLabel('Cancel')
-                        ->action(fn ($record, array $data) => $record->update([
+                        ->action(fn($record, array $data) => $record->update([
                             'stock' => $data['stock'],
-                        ])),
+                        ]))->modalWidth('sm'),
 
-                    Action::make('activate')
-                        ->label('Activar')
-                        ->icon('heroicon-o-check-circle')
-                        ->color('success')
-                        ->visible(fn ($record): bool => ! $record->trashed() && ! (bool) $record->active)
-                        ->action(fn ($record) => $record->update(['active' => true])),
 
-                    Action::make('deactivate')
-                        ->label('Desactivar')
-                        ->icon('heroicon-o-no-symbol')
-                        ->color('warning')
-                        ->visible(fn ($record): bool => ! $record->trashed() && (bool) $record->active)
-                        ->action(fn ($record) => $record->update(['active' => false])),
 
-                    EditAction::make(),
                     DeleteAction::make()
-                        ->before(fn ($record) => $record->update(['active' => false])),
+                        ->before(fn($record) => $record->update(['active' => false])),
                     RestoreAction::make()
-                        ->after(fn ($record) => $record->update(['active' => true])),
+                        ->after(fn($record) => $record->update(['active' => true])),
                     ForceDeleteAction::make(),
                 ])
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make()
-                        ->before(fn ($records) => $records->each(fn ($record) => $record->update(['active' => false]))),
+                        ->before(fn($records) => $records->each(fn($record) => $record->update(['active' => false]))),
                     RestoreBulkAction::make()
-                        ->after(fn ($records) => $records->each(fn ($record) => $record->update(['active' => true]))),
-                      
+                        ->after(fn($records) => $records->each(fn($record) => $record->update(['active' => true]))),
+
                     ForceDeleteBulkAction::make(),
                 ]),
             ]);

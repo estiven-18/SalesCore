@@ -88,3 +88,7 @@
 
 ## por hacer 
 - hacer que en clinets se puede enviar email desde el boton
+
+## por hacer
+
+- que se pueda acomodar el perfil

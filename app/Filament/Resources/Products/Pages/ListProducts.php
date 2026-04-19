@@ -17,10 +17,10 @@ class ListProducts extends ListRecords
     public function getTabs(): array
     {
         return [
-            'all' => Tab::make('Todos'),
-            'active' => Tab::make('Activos')
+            'all' => Tab::make('All'),
+            'active' => Tab::make('Active')
                 ->modifyQueryUsing(fn (Builder $query): Builder => $query->where('active', true)),
-            'inactive' => Tab::make('Desactivos')
+            'inactive' => Tab::make('Inactive')
                 ->modifyQueryUsing(fn (Builder $query): Builder => $query->where('active', false)),
         ];
     }
