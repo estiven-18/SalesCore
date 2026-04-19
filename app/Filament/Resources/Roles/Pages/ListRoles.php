@@ -22,13 +22,14 @@ class ListRoles extends ListRecords
                 ->label('New Role')
                 ->schema([
                     TextInput::make('name')
-                        ->label('Nombre')
+                        ->label('Name')
                         ->required(),
                     Toggle::make('active')
-                        ->label('Activo')
+                        ->label('Active')
                         ->default(true)
                         ->required(),
                 ])
+                ->modalWidth('sm')
                 ->action(function (array $data): void {
                     Role::create([
                         'name' => $data['name'],
@@ -42,10 +43,10 @@ class ListRoles extends ListRecords
     public function getTabs(): array
     {
         return [
-            'Todos' => Tab::make('Todos'),
-            'Activos' => Tab::make('Activos')
+            'All' => Tab::make('All'),
+            'Active' => Tab::make('Active')
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('active', true)),
-            'Desactivos' => Tab::make('Desactivos')
+            'Inactive' => Tab::make('Inactive')
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('active', false)),
         ];
     }
