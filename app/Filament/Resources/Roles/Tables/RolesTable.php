@@ -45,31 +45,36 @@ class RolesTable
             ->recordActions([
                 ActionGroup::make([
                     Action::make('deactivate')
-                        ->label('Desactivar')
+                        ->label('Desactivate')
                         ->icon('heroicon-o-no-symbol')
                         ->color('warning')
                         ->requiresConfirmation()
-                        ->visible(fn ($record): bool => ! $record->trashed() && (bool) $record->active)
-                        ->action(fn ($record) => $record->update(['active' => false])),
-                    DeleteAction::make()
-                        ->visible(fn ($record): bool => ! $record->trashed()),
-                    RestoreAction::make()
-                        ->visible(fn ($record): bool => $record->trashed()),
-                    ForceDeleteAction::make()
-                        ->visible(fn ($record): bool => $record->trashed()),
+                        ->visible(fn($record): bool => ! $record->trashed() && (bool) $record->active)
+                        ->action(fn($record) => $record->update(['active' => false])),
+                Action::make('activate')
+                        ->label('Activate')
+                        ->icon('heroicon-o-check-circle')
+                        ->color('success')
+                        ->requiresConfirmation()
+                        ->visible(fn($record): bool => ! $record->trashed() && ! (bool) $record->active)
+                        ->action(fn($record) => $record->update(['active' => true])),        
+
+
                     Action::make('updateRole')
-                        ->label('Editar')
+                        ->label('Edit')
                         ->icon('heroicon-o-pencil-square')
-                        ->visible(fn ($record): bool => ! $record->trashed())
+                        ->visible(fn($record): bool => ! $record->trashed())
                         ->schema([
                             TextInput::make('name')
-                                ->label('Nombre')
+                                ->label('Name')
                                 ->required(),
                             Toggle::make('active')
-                                ->label('Activo')
+                                ->label('Active')
                                 ->required(),
                         ])
-                        ->fillForm(fn ($record): array => [
+                        ->modalWidth('sm')
+
+                        ->fillForm(fn($record): array => [
                             'name' => $record->name,
                             'active' => (bool) $record->active,
                         ])
@@ -80,8 +85,14 @@ class RolesTable
                             ]);
                         })
                         ->stickyModalHeader(),
+                    DeleteAction::make()
+                        ->visible(fn($record): bool => ! $record->trashed()),
+                    RestoreAction::make()
+                        ->visible(fn($record): bool => $record->trashed()),
+                    ForceDeleteAction::make()
+                        ->visible(fn($record): bool => $record->trashed()),
                 ]),
-                
+
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
