@@ -15,7 +15,7 @@ class CustomerForm
     {
         return $schema
             ->components([
-                Section::make('Información general')
+                Section::make('GGeneral information')
                     ->schema([
                         // Primera fila
                         TextInput::make('name')

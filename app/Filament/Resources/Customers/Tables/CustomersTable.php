@@ -32,12 +32,14 @@ class CustomersTable
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('document')
-                    ->searchable(),
-                TextColumn::make('phone')
-                    ->label('Phone number')
-                    ->searchable(),
+                    ->searchable()
+                    ->searchable(isIndividual: true),
                 TextColumn::make('email')
                     ->label('Email address')
+                    ->searchable()
+                    ->searchable(isIndividual: true),
+                TextColumn::make('phone')
+                    ->label('Phone number')
                     ->searchable(),
                 TextColumn::make('address')
                     ->label('Address')
@@ -59,19 +61,19 @@ class CustomersTable
             ->recordActions([
                 Action::make('SendEmail')
                     ->label('Send emailHACER'),
-                    
+
                 ActionGroup::make([
                     Action::make('viewUser')
                         ->label('View customer')
                         ->icon('heroicon-o-eye')
-                        ->visible(fn ($record): bool => ! $record->trashed())
+                        ->visible(fn($record): bool => ! $record->trashed())
                         ->infolist([
                             TextEntry::make('name')
                                 ->label('Name'),
                             TextEntry::make('document')
                                 ->label('Document'),
                             TextEntry::make('phone')
-                                ->label('Phone'),    
+                                ->label('Phone'),
                             TextEntry::make('email')
                                 ->label('Email'),
                             TextEntry::make('address')
@@ -92,32 +94,32 @@ class CustomersTable
                         ->icon('heroicon-o-check-circle')
                         ->color('success')
                         ->requiresConfirmation()
-                        ->visible(fn ($record): bool => ! $record->trashed() && ! (bool) $record->active)
-                        ->action(fn ($record) => $record->update(['active' => true])),
+                        ->visible(fn($record): bool => ! $record->trashed() && ! (bool) $record->active)
+                        ->action(fn($record) => $record->update(['active' => true])),
 
                     Action::make('deactivate')
                         ->label('Deactivate')
                         ->icon('heroicon-o-no-symbol')
                         ->color('warning')
                         ->requiresConfirmation()
-                        ->visible(fn ($record): bool => ! $record->trashed() && (bool) $record->active)
-                        ->action(fn ($record) => $record->update(['active' => false])),
+                        ->visible(fn($record): bool => ! $record->trashed() && (bool) $record->active)
+                        ->action(fn($record) => $record->update(['active' => false])),
 
                     DeleteAction::make()
-                        ->visible(fn ($record): bool => ! $record->trashed())
-                        ->before(fn ($record) => $record->update(['active' => false])),
+                        ->visible(fn($record): bool => ! $record->trashed())
+                        ->before(fn($record) => $record->update(['active' => false])),
 
                     RestoreAction::make()
-                        ->visible(fn ($record): bool => $record->trashed()),
+                        ->visible(fn($record): bool => $record->trashed()),
 
                     ForceDeleteAction::make()
-                        ->visible(fn ($record): bool => $record->trashed()),
+                        ->visible(fn($record): bool => $record->trashed()),
                 ]),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make()
-                        ->before(fn ($records) => $records->each(fn ($record) => $record->update(['active' => false]))),
+                        ->before(fn($records) => $records->each(fn($record) => $record->update(['active' => false]))),
                     RestoreBulkAction::make(),
                     ForceDeleteBulkAction::make(),
                 ]),
