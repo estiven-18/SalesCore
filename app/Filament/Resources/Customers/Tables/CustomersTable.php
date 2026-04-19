@@ -60,7 +60,8 @@ class CustomersTable
             ])
             ->recordActions([
                 Action::make('SendEmail')
-                    ->label('Send emailHACER'),
+                    ->label('Send email')
+                    ->icon('heroicon-o-envelope'),
 
                 ActionGroup::make([
                     Action::make('viewUser')

@@ -15,7 +15,7 @@ class CustomerForm
     {
         return $schema
             ->components([
-                Section::make('GGeneral information')
+                Section::make('General information')
                     ->schema([
                         // Primera fila
                         TextInput::make('name')
@@ -43,7 +43,7 @@ class CustomerForm
                             ->required()
                             ->columnSpan(1),
                     ])
-                    ->columns(3)
+                    ->columns(2)
                     ->columnSpanFull(),
             ]);
     }

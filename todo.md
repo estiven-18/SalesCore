@@ -85,3 +85,6 @@
 
 ## por hacer 
 - hacer que si esta desactivado no deje seguri o que salga que esta desactivado (ya sea roles, users, sales, products, etc)
+
+## por hacer 
+- hacer que en clinets se puede enviar email desde el boton
