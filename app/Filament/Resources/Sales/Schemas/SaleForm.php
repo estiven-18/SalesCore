@@ -53,7 +53,21 @@ class SaleForm
                         ->numeric()
                         ->required()
                         ->default(1)
-                        ->live(),
+                        ->live()
+                        ->rules([
+                            function (callable $get) {
+                                return function (string $attribute, $value, \Closure $fail) use ($get) {
+                                    $productId = $get('product_id');
+                                    if (!$productId)
+                                        return;
+
+                                    $product = \App\Models\Product::find($productId);
+                                    if ($product && (int) $value > $product->stock) {
+                                        $fail("Stock insuficiente. Solo hay {$product->stock} unidades disponibles.");
+                                    }
+                                };
+                            }
+                        ]),
 
                     TextInput::make('discount')
                         ->label('Descuento (%)')

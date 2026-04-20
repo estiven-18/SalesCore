@@ -29,8 +29,43 @@ class Product extends Model
         ];
     }
 
+    /**
+     * Crea una alerta si el stock cae por debajo o igual al stock de seguridad.
+     */
+    public function checkLowStockAlert(): void
+    {
+        $stockSecurity = (int) $this->stock_security;
+        $currentStock = (int) $this->stock;
+
+        if ($stockSecurity > 0 && $currentStock <= $stockSecurity) {
+
+            // Evitar duplicar alertas activas para el mismo producto
+            $exists = Alert::where('alertable_type', self::class)
+                ->where('alertable_id', $this->id)
+                ->where('type', 'low_stock')
+                ->where('status', 'active')
+                ->exists();
+
+            if (!$exists) {
+                Alert::create([
+                    'alertable_type' => self::class,
+                    'alertable_id' => $this->id,
+                    'type' => 'low_stock',
+                    'message' => "Stock bajo: \"{$this->name}\" tiene {$currentStock} unidades (mínimo: {$stockSecurity}).",
+                    'status' => 'active',
+                    'active' => true,
+                ]);
+            }
+        }
+    }
+
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class);
+    }
+
+    public function alerts()
+    {
+        return $this->morphMany(Alert::class, 'alertable');
     }
 }
