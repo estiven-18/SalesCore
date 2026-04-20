@@ -53,11 +53,20 @@ class ProductForm
                                     ->preload()
                                     ->searchable()
                                     ->required(),
-                                TextInput::make('stock')
-                                    ->label('Stock')
-                                    ->numeric()
-                                    ->minValue(0)
-                                    ->required(),
+                                Group::make()
+                                    ->schema([
+                                        TextInput::make('stock')
+                                            ->label('Stock')
+                                            ->numeric()
+                                            ->minValue(0)
+                                            ->required(),
+                                        TextInput::make('stock_security')
+                                            ->label('Stock security')
+                                            ->numeric()
+                                            ->minValue(0)
+                                            ->required(),
+                                    ])->columns(2),
+
                                 TextInput::make('tax_rate')
                                     ->label('Tax rate (%)')
                                     ->numeric()

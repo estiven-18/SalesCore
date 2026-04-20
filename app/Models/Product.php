@@ -15,6 +15,7 @@ class Product extends Model
         'description',
         'price',
         'stock',
+        'stock_security',
         'tax_rate',
         'active',
     ];

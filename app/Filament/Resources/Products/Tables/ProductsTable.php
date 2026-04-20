@@ -36,6 +36,10 @@ class ProductsTable
                 TextColumn::make('stock')
                     ->sortable()
                     ->searchable(),
+                TextColumn::make('stock_security')
+                    ->label('Security Stock')
+                    ->sortable()
+                    ->searchable(),
                 TextColumn::make('tax_rate')
                     ->sortable()
                     ->suffix('%')
