@@ -31,10 +31,6 @@ class SaleForm
                     TextInput::make('address'),
                 ]),
 
-            Select::make('user_id')
-                ->relationship(name: 'user', titleAttribute: 'name')
-                ->searchable()
-                ->required(),
 
             Repeater::make('items')
                 ->relationship()
@@ -63,14 +59,15 @@ class SaleForm
 
                                     $product = \App\Models\Product::find($productId);
                                     if ($product && (int) $value > $product->stock) {
-                                        $fail("Stock insuficiente. Solo hay {$product->stock} unidades disponibles.");
+                                        //poner en ingles
+                                        $fail("Insufficient stock. Only {$product->stock} units available.");
                                     }
                                 };
                             }
                         ]),
 
                     TextInput::make('discount')
-                        ->label('Descuento (%)')
+                        ->label('Discount (%)')
                         ->numeric()
                         ->default(0)
                         ->minValue(0)
