@@ -53,20 +53,20 @@ class UsersTable
 
                 ActionGroup::make([
                     Action::make('viewUser')
-                        ->label('Ver usuario')
+                        ->label('View details')
                         ->icon('heroicon-o-eye')
                         ->visible(fn ($record): bool => ! $record->trashed())
                         ->infolist([
                             TextEntry::make('name')
-                                ->label('Nombre'),
+                                ->label('Name'),
                             TextEntry::make('email')
-                                ->label('Correo'),
+                                ->label('Email address'),
                             TextEntry::make('roles.name')
                                 ->label('Roles')
                                 ->badge()
                                 ->separator(', '),
                             IconEntry::make('active')
-                                ->label('Activo')
+                                ->label('Active')
                                 ->boolean(),
                         ])
                         ->modalSubmitAction(false)

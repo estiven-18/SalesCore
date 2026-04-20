@@ -28,7 +28,7 @@ class CategoriesTable
                 TextColumn::make('name')
                     ->searchable(),
                 IconColumn::make('active')
-                    ->boolean(),    
+                    ->boolean(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -36,40 +36,42 @@ class CategoriesTable
                 TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),   
-                
+                    ->toggleable(isToggledHiddenByDefault: true),
+
             ])
             ->filters([
                 TrashedFilter::make(),
             ])
             ->recordActions([
                 ActionGroup::make([
+                    Action::make('activate')
+                        ->label('Activate')
+                        ->icon('heroicon-o-check-circle')
+                        ->color('success')
+                        ->requiresConfirmation()
+                        ->visible(fn($record): bool => ! $record->trashed() && ! (bool) $record->active)
+                        ->action(fn($record) => $record->update(['active' => true])),
+
                     Action::make('deactivate')
-                        ->label('Desactivate')
+                        ->label('Deactivate')
                         ->icon('heroicon-o-no-symbol')
                         ->color('warning')
                         ->requiresConfirmation()
-                        ->visible(fn ($record): bool => ! $record->trashed() && (bool) $record->active)
-                        ->action(fn ($record) => $record->update(['active' => false])),
-                    DeleteAction::make()
-                        ->visible(fn ($record): bool => ! $record->trashed()),
-                    RestoreAction::make()
-                        ->visible(fn ($record): bool => $record->trashed()),
-                    ForceDeleteAction::make()
-                        ->visible(fn ($record): bool => $record->trashed()),
+                        ->visible(fn($record): bool => ! $record->trashed() && (bool) $record->active)
+                        ->action(fn($record) => $record->update(['active' => false])),
                     Action::make('updateCategory')
                         ->label('Edit')
                         ->icon('heroicon-o-pencil-square')
-                        ->visible(fn ($record): bool => ! $record->trashed())
+                        ->visible(fn($record): bool => ! $record->trashed())
                         ->schema([
                             TextInput::make('name')
-                                ->label('Nombre')
+                                ->label('Name')
                                 ->required(),
                             Toggle::make('active')
-                                ->label('Activo')
+                                ->label('Active')
                                 ->required(),
                         ])
-                        ->fillForm(fn ($record): array => [
+                        ->fillForm(fn($record): array => [
                             'name' => $record->name,
                             'active' => (bool) $record->active,
                         ])
@@ -79,7 +81,16 @@ class CategoriesTable
                                 'active' => (bool) $data['active'],
                             ]);
                         })
+                        ->modalWidth('sm')
                         ->stickyModalHeader(),
+
+                    DeleteAction::make()
+                        ->visible(fn($record): bool => ! $record->trashed()),
+                    RestoreAction::make()
+                        ->visible(fn($record): bool => $record->trashed()),
+                    ForceDeleteAction::make()
+                        ->visible(fn($record): bool => $record->trashed()),
+
                 ]),
             ])
             ->toolbarActions([

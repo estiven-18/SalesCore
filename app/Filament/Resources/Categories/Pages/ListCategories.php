@@ -19,13 +19,13 @@ class ListCategories extends ListRecords
     {
         return [
             Action::make('createCategory')
-                ->label('New category')
+                ->label('New Categories')
                 ->schema([
                     TextInput::make('name')
-                        ->label('Nombre')
+                        ->label('Name')
                         ->required(),
                     Toggle::make('active')
-                        ->label('Activo')
+                        ->label('Active')
                         ->default(true)
                         ->required(),
                 ])
@@ -35,17 +35,18 @@ class ListCategories extends ListRecords
                         'active' => (bool) $data['active'],
                     ]);
                 })
-                ->stickyModalHeader(),
+                ->stickyModalHeader()
+                ->modalwidth('sm'),
         ];
     }
 
     public function getTabs(): array
     {
         return [
-            'Todos' => Tab::make('Todos'),
-            'Activos' => Tab::make('Activos')
+            'Todos' => Tab::make('All'),
+            'Activos' => Tab::make('Active')
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('active', true)),
-            'Desactivos' => Tab::make('Desactivos')
+            'Desactivos' => Tab::make('Inactive')
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('active', false)),
         ];
     }

@@ -92,3 +92,6 @@
 ## por hacer
 
 - que se pueda acomodar el perfil
+
+## por hacer 
+- hacer que se ponga en el producto cuando es el minimo para que mande alerta
