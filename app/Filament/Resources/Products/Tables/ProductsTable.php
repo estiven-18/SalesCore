@@ -91,7 +91,8 @@ class ProductsTable
                         ->fillForm(fn($record): array => [
                             'price' => $record->price,
                         ])
-                        ->form([
+                        // se cambia de form a schema
+                        ->schema([
                             TextInput::make('price')
                                 ->label('Price*')
                                 ->prefix('$')
@@ -113,7 +114,7 @@ class ProductsTable
                         ->fillForm(fn($record): array => [
                             'stock' => $record->stock,
                         ])
-                        ->form([
+                        ->schema([
                             TextInput::make('stock')
                                 ->label('Stock*')
                                 ->numeric()

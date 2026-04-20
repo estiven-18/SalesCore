@@ -68,7 +68,8 @@ class CustomersTable
                         ->label('View customer')
                         ->icon('heroicon-o-eye')
                         ->visible(fn($record): bool => ! $record->trashed())
-                        ->infolist([
+                        //se cambia de infolist a schema
+                        ->schema([
                             TextEntry::make('name')
                                 ->label('Name'),
                             TextEntry::make('document')

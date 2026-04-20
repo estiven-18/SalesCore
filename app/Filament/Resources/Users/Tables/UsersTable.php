@@ -56,7 +56,8 @@ class UsersTable
                         ->label('View details')
                         ->icon('heroicon-o-eye')
                         ->visible(fn ($record): bool => ! $record->trashed())
-                        ->infolist([
+                        //se cambia de infolist a schema
+                        ->schema([
                             TextEntry::make('name')
                                 ->label('Name'),
                             TextEntry::make('email')
