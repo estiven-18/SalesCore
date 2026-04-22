@@ -51,7 +51,7 @@ class Product extends Model
                     'alertable_type' => self::class,
                     'alertable_id' => $this->id,
                     'type' => 'low_stock',
-                    'message' => "Stock bajo: \"{$this->name}\" tiene {$currentStock} unidades (mínimo: {$stockSecurity}).",
+                    'message' => "Low Stock: \"{$this->name}\" has {$currentStock} units (minimum: {$stockSecurity}).",
                     'status' => 'active',
                     'active' => true,
                 ]);

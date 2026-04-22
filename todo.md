@@ -95,3 +95,7 @@
 
 ## por hacer 
 - hacer que se ponga en el producto cuando es el minimo para que mande alerta
+
+## por hacer
+
+- que en la venta salga la hora y la cantida de prodctos
