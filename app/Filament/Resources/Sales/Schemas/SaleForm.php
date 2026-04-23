@@ -43,9 +43,9 @@ class SaleForm
                                         TextInput::make('address'),
                                     ]),
 
-                                Select::make('user_id')
-                                    ->relationship('user', 'name')
-                                    ->default(auth()->user()->id)
+                                TextInput::make('seller')
+                                    ->label('Seller')
+                                    ->default(fn() => \Illuminate\Support\Facades\Auth::user()->name)
                                     ->disabled()
                                     ->dehydrated(),
                             ])->columns(2),
