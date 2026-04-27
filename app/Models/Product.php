@@ -29,6 +29,22 @@ class Product extends Model
         ];
     }
 
+    protected static function booted(): void
+    {
+        static::created(function (Product $product) {
+            \App\Models\InventoryMovement::create([
+                'product_id' => $product->id,
+                'user_id'    => \Illuminate\Support\Facades\Auth::id(),
+                //tipo es : entrada - ajuste - venta - devolucion 
+                //type es : initial, sale, return, adjustment
+                'type'       => 'initial',
+                'quantity'   => $product->stock,
+                'reason'     => 'Initial stock on product creation',
+                'active'     => true,
+            ]);
+        });
+    }
+
     /**
      * Crea una alerta si el stock cae por debajo o igual al stock de seguridad.
      */

@@ -35,3 +35,7 @@
 ## por hacer
 
 - borrar vistas que no vayan y acmodar las redirecciones cundao se hayan o terminen accions
+
+## por hacer 
+
+- hacer que se pueda devolver los productos
