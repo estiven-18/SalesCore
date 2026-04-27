@@ -1,86 +1,4 @@
-## por hacer 
 
-//todo: poner que salga el numero de venta
-//TODO:QUE SE DESCUANTE DEL INVENTARIO
-//TODO: QUE NE BILLING SALGA EL TOTAL, EL IMPUESTO Y EL DESCUENTO POR SEPARADO PERO EN LA MISMA VISTA
-
-- /*  Wizard::make([
-                Step::make('Sale Detail')
-                    ->schema([
-                        Select::make('customer_id')
-                            ->relationship('customer', 'name')
-                            ->searchable()
-                            ->required()
-                            ->createOptionForm([
-                                TextInput::make('name')->required(),
-                                TextInput::make('email')->required()->email(),
-                                TextInput::make('document')->required(),
-                                TextInput::make('phone')->required(),
-                                TextInput::make('address'),
-                            ]),
-                        Select::make('user_id')
-                            ->relationship(name: 'user', titleAttribute: 'name')
-                            ->searchable()
-                            ->required(),
-                    ])
-                    ->columns(2)
-                    ->columnSpanFull(),
-                Step::make('Sale Items')
-                    ->schema([
-                        Repeater::make('items')
-                            ->relationship()
-                            ->schema([
-                                Select::make('product_id')
-                                    ->relationship('product', 'name')
-                                    ->live()
-                                    ->afterStateUpdated(function ($state, callable $set) {
-                                        $product = Product::find($state);
-                                        $set('unit_price', $product?->price ?? 0);
-                                        $set('tax_rate', $product?->tax_rate ?? 0);
-                                    })
-                                    ->required(),
-                                TextInput::make('quantity')
-                                    ->numeric()
-                                    ->required()
-                                    ->default(1)
-                                    ->live(),
-                                TextInput::make('discount')
-                                    ->label('Descuento (%)')
-                                    ->numeric()
-                                    ->default(0)
-                                    ->minValue(0)
-                                    ->maxValue(100)
-                                    ->live(),
-                                TextInput::make('tax_rate')
-                                    ->numeric()
-                                    ->default(0)
-                                    ->required()
-                                    ->live(),
-                                TextInput::make('unit_price')
-                                    ->numeric()
-                                    ->required()
-                                    ->disabled()
-                                    ->live(),
-                            ])
-                            ->columns(5)
-                            ->live()
-                            ->afterStateUpdated(function (callable $set, callable $get) {
-                                self::updateTotal($set, $get);
-                            }),
-                    ]),
-                Step::make('Billing')
-                    ->schema([
-                        TextInput::make('total')
-                            ->numeric()
-                            ->disabled()
-                            ->dehydrated()
-                            ->default(0)
-                            ->afterStateHydrated(function (callable $set, callable $get) {
-                                self::updateTotal($set, $get);
-                            }),
-                    ]),
-            ])
-            ->columnSpanFull(), */
 
 
 ## por hacer 
@@ -93,9 +11,27 @@
 
 - que se pueda acomodar el perfil
 
-## por hacer 
-- hacer que se ponga en el producto cuando es el minimo para que mande alerta
 
 ## por hacer
 
-- que en la venta salga la hora y la cantida de prodctos
+- que en la venta salga la hora y la cantida de prodctos en la tabla
+
+## por hacer
+
+- hacer que en pdf salga el cliente el empleado hora etc
+
+## por hcaer
+
+- hacer que el movimientos de inventario salga el id del empleado
+
+## por hacer
+
+- hacer mas que las tablas tengan mas filtro para biscar mas rapido
+
+## por hacer
+
+- hacer que en alertas en el tipo sea stock bajo o ventas bajas y poner que se pueda descaticvar o poner como leida la alerta
+
+## por hacer
+
+- borrar vistas que no vayan y acmodar las redirecciones cundao se hayan o terminen accions

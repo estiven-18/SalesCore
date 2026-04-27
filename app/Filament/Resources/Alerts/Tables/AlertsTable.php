@@ -21,18 +21,30 @@ class AlertsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->recordUrl(null)
             ->columns([
+                TextColumn::make('alertable.name')
+                    ->label('Product')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('alertable.categories.name')
+                    ->label('Categories')
+                    ->badge()
+                    ->separator(', ')
+                    ->searchable()
+                    ->placeholder('-'),   
+                TextColumn::make('type')
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('message')
                     ->searchable(),
-                
+                TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable(),
                 TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable(),
-                    
                 TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
@@ -46,31 +58,33 @@ class AlertsTable
                 Action::make('restaurarStock')
                     ->label('Restore Stock')
                     ->icon('heroicon-o-arrow-up-circle')
-                    //en ingles
                     ->modalHeading('Restore Stock')
                     ->schema([
                         \Filament\Forms\Components\TextInput::make('cantidad')
                             ->label('Quantity to Restore')
                             ->numeric()
                             ->required()
-                            ->minValue(fn($record) => ($record->alertable && isset($record->alertable->stock_security)) ? $record->alertable->stock_security : 1)
-                            ->helperText('Must be greater than or equal to the security stock.'),
+                            ->minValue(fn($record) => ($record->alertable)
+                                ? max(1, (int) $record->alertable->stock_security - (int) $record->alertable->stock)
+                                : 1)
+                            ->helperText(fn($record) => ($record->alertable)
+                                ? 'Minimum: ' . max(1, (int) $record->alertable->stock_security - (int) $record->alertable->stock) . ' units (what is missing to reach security stock).'
+                                : 'Enter quantity.')
                     ])
                     ->action(function ($record, array $data) {
-                        // Buscar el producto relacionado
                         $producto = $record->alertable;
                         if ($producto instanceof Product) {
                             $cantidad = (int) $data['cantidad'];
-                            $stockSeguridad = (int) $producto->stock_security;
-                            if ($cantidad >= $stockSeguridad) {
+                            $faltante = max(1, (int) $producto->stock_security - (int) $producto->stock);
+
+                            if ($cantidad >= $faltante) {
                                 $producto->stock += $cantidad;
                                 $producto->save();
-                                // Eliminar la alerta después de restaurar el stock
                                 $record->delete();
                             } else {
                                 \Filament\Notifications\Notification::make()
                                     ->title('Invalid Quantity')
-                                    ->body('The quantity must be greater than or equal to the security stock.')
+                                    ->body("Must restore at least {$faltante} units to reach security stock.")
                                     ->danger()
                                     ->send();
                             }

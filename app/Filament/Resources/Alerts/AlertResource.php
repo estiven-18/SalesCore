@@ -22,7 +22,7 @@ class AlertResource extends Resource
 {
     protected static ?string $model = Alert::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBellAlert;
 
     protected static ?string $recordTitleAttribute = 'name';
 
@@ -52,9 +52,6 @@ class AlertResource extends Resource
     {
         return [
             'index' => ListAlerts::route('/'),
-            'create' => CreateAlert::route('/create'),
-            'view' => ViewAlert::route('/{record}'),
-            'edit' => EditAlert::route('/{record}/edit'),
         ];
     }
 

@@ -50,9 +50,9 @@ class Product extends Model
                 Alert::create([
                     'alertable_type' => self::class,
                     'alertable_id' => $this->id,
-                    'type' => 'low_stock',
+                    'type' => 'low stock',
                     'message' => "Low Stock: \"{$this->name}\" has {$currentStock} units (minimum: {$stockSecurity}).",
-                    'status' => 'active',
+                    'status' => 'Not resolved',
                     'active' => true,
                 ]);
             }
