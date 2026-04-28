@@ -16,11 +16,11 @@ class InventoryMovementsTable
     {
         return $table
             ->columns([
-                TextColumn::make('user_id')
+                TextColumn::make('user.name')
                     ->label('User')
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('product_id')
+                TextColumn::make('product.name')
                     ->label('Product')
                     ->numeric()
                     ->sortable(),
