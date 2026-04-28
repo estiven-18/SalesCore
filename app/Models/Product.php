@@ -37,11 +37,30 @@ class Product extends Model
                 'user_id'    => \Illuminate\Support\Facades\Auth::id(),
                 //tipo es : entrada - ajuste - venta - devolucion 
                 //type es : initial, sale, return, adjustment
+                //si se edita el producto se pone en el inventario como adjustment
+                //si se borra el producto se pone como adjusment con cantidad negativa
                 'type'       => 'initial',
                 'quantity'   => $product->stock,
                 'reason'     => 'Initial stock on product creation',
                 'active'     => true,
             ]);
+        });
+
+        static::updated(function (Product $product) {
+            if ($product->wasChanged('stock')) {
+                $oldStock = (int) $product->getOriginal('stock');
+                $newStock = (int) $product->stock;
+                $diff = $newStock - $oldStock;
+
+                InventoryMovement::create([
+                    'product_id' => $product->id,
+                    'user_id'    => \Illuminate\Support\Facades\Auth::id(),
+                    'type'       => 'adjustment',
+                    'quantity'   => $diff, // positivo si subió, negativo si bajó
+                    'reason'     => "Stock adjusted from {$oldStock} to {$newStock}",
+                    'active'     => true,
+                ]);
+            }
         });
     }
 
