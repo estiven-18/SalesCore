@@ -39,3 +39,7 @@
 ## por hacer 
 
 - hacer que se pueda devolver los productos
+
+## por hacer
+
+- poner en sale otro campo con el numro de venta ejm vt2134 

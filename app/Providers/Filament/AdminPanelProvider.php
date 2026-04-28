@@ -43,6 +43,8 @@ class AdminPanelProvider extends PanelProvider
                 AccountWidget::class,
                 FilamentInfoWidget::class,
             ])
+
+            // Aquí se añaden los middlewares necesarios para el panel de administración
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
