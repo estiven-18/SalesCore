@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Log;
 
 class Product extends Model
 {
@@ -29,16 +30,17 @@ class Product extends Model
         ];
     }
 
+    //tipo es : entrada - ajuste - venta - devolucion 
+    //type es : initial, sale, return, adjustment
+    //si se edita el producto se pone en el inventario como adjustment
+    //si se borra el producto se pone como adjusment con cantidad negativa
+
     protected static function booted(): void
     {
         static::created(function (Product $product) {
             \App\Models\InventoryMovement::create([
                 'product_id' => $product->id,
                 'user_id'    => \Illuminate\Support\Facades\Auth::id(),
-                //tipo es : entrada - ajuste - venta - devolucion 
-                //type es : initial, sale, return, adjustment
-                //si se edita el producto se pone en el inventario como adjustment
-                //si se borra el producto se pone como adjusment con cantidad negativa
                 'type'       => 'initial',
                 'quantity'   => $product->stock,
                 'reason'     => 'Initial stock on product creation',
@@ -47,17 +49,56 @@ class Product extends Model
         });
 
         static::updated(function (Product $product) {
-            if ($product->wasChanged('stock')) {
-                $oldStock = (int) $product->getOriginal('stock');
-                $newStock = (int) $product->stock;
-                $diff = $newStock - $oldStock;
+            
+            if (!$product->wasChanged('stock') || $product->deleted_at) return;
+            $oldStock = (int) $product->getOriginal('stock');
+            $newStock = (int) $product->stock;
+            $diff = $newStock - $oldStock;
+
+            if ($diff === 0) return;
+
+            InventoryMovement::create([
+                'product_id' => $product->id,
+                'user_id'    => \Illuminate\Support\Facades\Auth::id(),
+                'type'       => 'adjustment',
+                'quantity'   => $diff, // positivo si subió, negativo si bajó
+                'reason'     => "Stock adjusted from {$oldStock} to {$newStock}",
+                'active'     => true,
+            ]);
+        });
+
+        static::deleted(function (Product $product) {
+            if ($product->isForceDeleting()) return;
+
+            InventoryMovement::create([
+                'product_id' => $product->id,
+                'user_id'    => \Illuminate\Support\Facades\Auth::id(),
+                'type'       => 'archived', 
+                'quantity'   => -$product->stock,
+                'reason'     => "Product archived. Stock before: {$product->stock}",
+                'active'     => true,
+            ]);
+        });
+
+        static::restored(function (Product $product) {
+            $lastArchived = InventoryMovement::withTrashed()
+                ->where('product_id', $product->id)
+                ->where('type', 'archived')
+                ->latest()
+                ->first();
+
+            $stockAnterior = $lastArchived ? abs($lastArchived->quantity) : 0;
+
+            if ($stockAnterior > 0) {
+                $product->stock = $stockAnterior;
+                $product->saveQuietly();
 
                 InventoryMovement::create([
                     'product_id' => $product->id,
                     'user_id'    => \Illuminate\Support\Facades\Auth::id(),
-                    'type'       => 'adjustment',
-                    'quantity'   => $diff, // positivo si subió, negativo si bajó
-                    'reason'     => "Stock adjusted from {$oldStock} to {$newStock}",
+                    'type'       => 'restored',
+                    'quantity'   => $stockAnterior,
+                    'reason'     => "Product restored. Stock recovered: {$stockAnterior}",
                     'active'     => true,
                 ]);
             }

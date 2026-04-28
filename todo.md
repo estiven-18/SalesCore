@@ -43,3 +43,11 @@
 ## por hacer
 
 - poner en sale otro campo con el numro de venta ejm vt2134 
+
+## por hacer 
+
+- que no se peuda borra el producti solo archivar
+
+## por hacer
+
+- mirar la loguica de activar y descativar de producto, ya que puede tenr conflictos con la tabla de inventory movenents
