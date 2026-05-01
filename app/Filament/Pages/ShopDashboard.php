@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Filament\Widgets\SalesYearOverYearChart;
+use App\Filament\Widgets\CustomerGrowthChart;
 use Filament\Pages\Dashboard as BaseDashboard;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
@@ -49,6 +50,7 @@ class ShopDashboard extends BaseDashboard
         return [
             ShopKpiStats::class,
             SalesYearOverYearChart::class,
+            CustomerGrowthChart::class,
         ];
     }
 }
