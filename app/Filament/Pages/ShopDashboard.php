@@ -21,7 +21,7 @@ class ShopDashboard extends BaseDashboard
 
     protected static string $routePath = 'shop';
     protected static ?string $title = 'Shop Dashboard';
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedShoppingCart;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedPresentationChartLine;
     protected static ?int $navigationSort = 2;
 
     public function filtersForm(Schema $schema): Schema
