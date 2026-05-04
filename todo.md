@@ -51,3 +51,11 @@
 ## por hacer
 
 - mirar la loguica de activar y descativar de producto, ya que puede tenr conflictos con la tabla de inventory movenents
+
+## por hacer
+
+- se pueda filtrar por categiria en la tabla proditco
+
+## por hacer
+
+- mejorar el diseño y como se muestar la informacion del las exportacion 
